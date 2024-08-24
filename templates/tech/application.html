@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src=""></script>
+<div class="limitsApp">
+    <label for="limit-select">Показать:</label>
+    <select id="limit-select" onchange="changeLimit(this)">
+        <option value="5" {% if limit == 5 %}selected{% endif %}>5</option>
+        <option value="10" {% if limit == 10 %}selected{% endif %}>10</option>
+        <option value="20" {% if limit == 20 %}selected{% endif %}>20</option>
+        <option value="50" {% if limit == 50 %}selected{% endif %}>50</option>
+    </select>
+</div>
+{% for app in Applications %}
+    <h2>{{app.title}}</h2>
+    <p>{{app.description}}</p>
+    <p>{{app.solved}}</p>
+    <p>{{app.created_at}}</p>
+    <p>{{app.author}}</p>
+{% endfor %}
+<form action="{% url 'create' %}">
+    <button>Добавить заявку</button>
+</form>
+
+{% endblock content %}

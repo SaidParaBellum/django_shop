@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock style %}
+
+
+
+
+
+{% block title %} Main Page {% endblock title %}
+{% block content %}
+
+<!--<h1>Hello world</h1>-->
+<!--{% if request.user.is_authenticated %}-->
+<!--<h1>Привет, {{request.user.username}}</h1>-->
+<!--{% endif %}-->
+<!--<h1>Привет, {{user.username}}</h1>-->
+
+{% if request.user.is_authenticated %}
+
+<div class="user_container">
+    <h1>Привет, {{request.user.username}}</h1>
+
+    <form action="{% url 'logout' %}">
+        <button>Выйти</button>
+    </form>
+    {% if request.user.role.name_en == 'admin' %}
+    <form action="{% url 'application' %}">
+        <button>Заявки</button>
+    </form>
+    <form action="{% url 'show_category' %}">
+        <button>Категории</button>
+    </form>
+
+    {% endif %}
+</div>
+{% endif %}
+
+{% if not request.user.is_authenticated %}
+{% csrf_token %}
+<form action="{% url 'login' %}">
+    <button>Войти</button>
+</form>
+{% endif %}
+<div class="limits">
+    <a href="{% url 'index' %}?page=1&limit=5">5</a>
+    <a href="{% url 'index' %}?page=1&limit=10">10</a>
+    <a href="{% url 'index' %}?page=1&limit=20">20</a>
+    <a href="{% url 'index' %}?page=1&limit=50">50</a>
+
+</div>
+
+<div class="items-container">
+    {% for item in items %}
+
+    <div class="item {{ item.get_css_class }}">
+        {% if item.picture %}
+            <img src="{{ item.picture.url }}">
+        {% endif %}
+        <a href="{% url 'get_item' item.id %}">{{ item.name }}</a>
+
+        <p>{{ item.description }}</p>
+        <p>Price: {{ item.price }}</p>
+        <p>Count: {{ item.count }}</p>
+        <p>Updated at: {{ item.updated_at }}</p>
+        <form action="{% url 'change_item' item.id %}">
+            <button>Изменить товар</button>
+        </form>
+        <form action="{% url 'delete_item' item.id %}">
+            <button>Удалить товар</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="pages">
+    {% if page > 1 %}
+    <a href="{% url 'index' %}?page={{page|add:-1}}&limit={{limit}}"><<</a>
+    {% endif %}
+    <span>{{page}}</span>
+    {% if page < num_pages %}
+    <a href="{% url 'index' %}?page={{page|add:1}}&limit={{limit}}">>></a>
+    {% endif %}
+</div>
+
+<form action="{% url 'item_create' %}">
+    <button>Добавить товар</button>
+</form>
+<form action="{% url 'application' %}">
+    <button>Tech Support</button>
+</form>
+      {% endblock content %}

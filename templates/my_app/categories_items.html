@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>{{ category.name }}</h2>
+
+    {% if category.items %}
+        <ul>
+            {% for item in category.items %}
+                <li>
+                    <p>{{ item.name }}</p>
+                    <p>{{ item.description }}</p>
+                    <p>Price: {{ item.price }}</p>
+                    <p>Count: {{ item.count }}</p>
+                    <p>Updated at: {{ item.updated_at }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Товаров к сожалению нет</p>
+    {% endif %}
+
+    <form action="{% url 'categories_items' category.id %}" method="GET">
+        <label for="categories">Выберите категории:</label>
+        <select name="categories" id="categories" multiple>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if cat.id in selected_categories %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Применить фильтр</button>
+        <a href="{% url 'clear_filters' %}">Очистить фильтры</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список товаров</title>
+</head>
+<body>
+<h1>ITEMS: </h1>
+{% for item in items %}
+<p>{{item.id}}</p>
+{{item.name}}
+{{item.picture}}
+<hr>
+<img src="{{item.picture.url}}" alt="{{item.name}}">
+
+{% endfor %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="picture">
+    <input type="submit" value="SEND">
+
+</form>
+</body>
+</html>

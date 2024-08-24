@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Item creation {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock style %}
+{% block content %}
+<form action="" method="post">
+
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div>
+        {{field.label_tag}}
+        {{field}}
+        {{field.errors}}
+    </div>
+    {% endfor %}
+
+    <input type="submit" value="Отправить">
+
+</form>
+{% endblock %}

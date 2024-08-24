@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <p>Name: {{ item.name }}</p>
+    <p>{{ item.description }}</p>
+    <p>Price: {{ item.price }}</p>
+    <p>Count: {{ item.count }}</p>
+    <p>Updated at: {{ item.updated_at }}</p>
+    <img src="{{ item.picture.url }}">
+
+    <h2>Добавить отзыв:</h2>
+    <form method="post" action="{% url 'add_review' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Отправить">
+    </form>
+
+    <h2>Отзывы:</h2>
+    {% for review in reviews %}
+        {% if review.show == True %}
+            <div>
+                <p>Имя: {{ review.name }}</p>
+                <p>Отзыв: {{ review.content }}</p>
+                <p>Оценка: {{ review.rating }}</p>
+                {% if review.image %}
+                    <img src="{{ review.image.url }}" alt="review image">
+                {% endif %}
+        {% endif %}
+        </div>
+    {% endfor %}
+
+    <form action="{% url 'change_item' item.id %}">
+        <button>Изменить товар</button>
+    </form>
+    <form action="{% url 'delete_item' item.id %}">
+        <button>Удалить товар</button>
+    </form>
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% if request.user.role.name_en == 'admin' %}
+        {% for cat in categories %}
+            <a href="{% url 'categories_items' cat.id %}">{{ cat.name }}</a>
+            <form action="{% url 'change_category' cat.id %}" method="post">
+                {% csrf_token %}
+                <button>Изменить категорию</button>
+            </form>
+            <form action="{% url 'delete_category' cat.id %}" method="post">
+                {% csrf_token %}
+                <button>Удалить категорию</button>
+            </form>
+        {% endfor %}
+        <form action="{% url 'category_create' %}" method="post">
+            {% csrf_token %}
+            <button>Добавить категорию</button>
+        </form>
+    {% endif %}
+
+    {% if categories %}
+        <form method="get" action="{% url 'show_category' %}">
+            <label for="category-select">Выберите категории:</label>
+            <select id="category-select" name="categories" multiple>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Фильтровать</button>
+        </form>
+
+        <form method="get" action="{% url 'show_category' %}">
+            <button type="submit">Очистить фильтры</button>
+        </form>
+
+        {% for cat in categories %}
+            <h2>{{ cat.name }}</h2>
+            {% if cat.items %}
+                <ul>
+                    {% for item in cat.items %}
+                        <li>{{ item.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Товаров к сожалению нет</p>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>Товаров к сожалению нет</p>
+    {% endif %}
+{% endblock content %}
